@@ -14,6 +14,7 @@ div#messageArea {
     position: absolute;
     top: 0px;
     left: 0px;
+    font-size: 2em;
     color: rgb(83, 175, 19);
 }
 

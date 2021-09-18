@@ -18,11 +18,12 @@ let view = {
 
 let model = {
     boardSize: 7,
-    numShips: 4,
+    numShips: 5,
     shipLength: 3,
     shipsSunk: 0,
 
     ships: [{ locations: [0, 0, 0], hits: ['', '', ''] },
+    { locations: [0, 0, 0], hits: ['', '', ''] },
     { locations: [0, 0, 0], hits: ['', '', ''] },
     { locations: [0, 0, 0], hits: ['', '', ''] },
     { locations: [0, 0, 0], hits: ['', '', ''] }],
