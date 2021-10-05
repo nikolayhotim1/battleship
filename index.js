@@ -1,4 +1,4 @@
-'usestrict';
+'use strict';
 let view = {
     displayMessage: function (msg) {
         let messageArea = document.getElementById('messageArea');
@@ -68,10 +68,10 @@ let model = {
     },
 
     collision: function (locations) {
-        for (var i = 0; i < this.numShips; i++) {
-            var ship = model.ships[i];
+        for (let i = 0; i < this.numShips; i++) {
+            let ship = model.ships[i];
 
-            for (var j = 0; j < locations.length; j++) {
+            for (let j = 0; j < locations.length; j++) {
 
                 if (ship.locations.indexOf(locations[j]) >= 0) {
                     return true;
@@ -87,7 +87,7 @@ let model = {
             let ship = this.ships[i];
             let index = ship.locations.indexOf(guess);
 
-            if (index >= 0) {
+            if (index >= 0 && ship.hits[index] !== 'hit') {
                 ship.hits[index] = 'hit';
                 view.displayHit(guess);
                 view.displayMessage('HIT!');
@@ -98,6 +98,9 @@ let model = {
                 }
 
                 return true;
+            } else if (index >= 0 && ship.hits[index] === 'hit') {
+                view.displayMessage('You\'ve hits this area of the ship before!');
+                return false;
             }
         }
 
@@ -141,7 +144,7 @@ function parseGuess(guess) {
     if (guess === null || guess.length !== 2) {
         alert('Oops, please enter a letter and a number on the board.');
     } else {
-        firstChar = guess.charAt(0);
+        let firstChar = guess.charAt(0);
         let row = alphabet.indexOf(firstChar);
         let column = guess.charAt(1);
 
@@ -163,7 +166,7 @@ function init() {
     fireButton.onclick = handleFireButton;
 
     let guessInput = document.getElementById('guessInput');
-    guessInput.onkeypress = handleKeyPress;
+    guessInput.onkeydown = handleKeyPress;
 
     model.generateShipLocations();
 }
