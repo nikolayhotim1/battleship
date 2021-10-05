@@ -98,8 +98,11 @@ let model = {
                 }
 
                 return true;
-            } else if (index >= 0 && ship.hits[index] === 'hit') {
+            } else if (index >= 0 && ship.hits[index] === 'hit' && !this.isSunk(ship)) {
                 view.displayMessage('You\'ve hits this area of the ship before!');
+                return false;
+            } else if (index >= 0 && ship.hits[index] === 'hit' && this.isSunk(ship)) {
+                view.displayMessage('You\'ve sunk this ship before!');
                 return false;
             }
         }
