@@ -18,26 +18,25 @@ let view = {
 
 let model = {
     boardSize: 7,
-    numShips: 5,
+    numShips: 4,
     shipLength: 3,
     shipsSunk: 0,
 
-    ships: [{ locations: [0, 0, 0], hits: ['', '', ''] },
-    { locations: [0, 0, 0], hits: ['', '', ''] },
-    { locations: [0, 0, 0], hits: ['', '', ''] },
-    { locations: [0, 0, 0], hits: ['', '', ''] },
-    { locations: [0, 0, 0], hits: ['', '', ''] }],
+    ships: [{ locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+    { locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+    { locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+    { locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }],
 
     generateShipLocations: function () {
-        let locations;
+        let area;
 
         for (let i = 0; i < this.numShips; i++) {
-
             do {
-                locations = this.generateShip();
-            } while (this.collision(locations));
+                area = this.generateShip();
+            } while (this.collision(area));
 
-            this.ships[i].locations = locations;
+            this.ships[i].locations = area[0];
+            this.ships[i].border = area[1];
         }
     },
 
@@ -54,26 +53,61 @@ let model = {
         }
 
         let newShipLocations = [];
+        let newShipBorder = [];
+        let newShipArea = [newShipLocations, newShipBorder];
 
         for (let i = 0; i < this.shipLength; i++) {
-
             if (direction === 1) {
                 newShipLocations.push(row + '' + (col + i));
+
+                if (i === 0) {
+                    newShipBorder.push(row + '' + ((col + i) - 1));
+                    newShipBorder.push((row + 1 + '') + (col + i));
+                    newShipBorder.push((row + 1 + '') + ((col + i) - 1));
+                    newShipBorder.push((row - 1 + '') + (col + i));
+                    newShipBorder.push((row -1 + '') + ((col + i) - 1));
+                } else if (i === this.shipLength - 1) {
+                    newShipBorder.push(row + '' + ((col + i) + 1));
+                    newShipBorder.push((row + 1 + '') + (col + i));
+                    newShipBorder.push((row + 1 + '') + ((col + i) + 1));
+                    newShipBorder.push((row - 1 + '') + (col + i));
+                    newShipBorder.push((row - 1 + '') + ((col + i) + 1));
+                } else {
+                    newShipBorder.push((row + 1 + '') + (col + i));
+                    newShipBorder.push((row - 1 + '') + (col + i));
+                }
             } else {
                 newShipLocations.push((row + i) + '' + col);
+
+                if (i === 0) {
+                    newShipBorder.push((((row + i) - 1) + '') + col);
+                    newShipBorder.push(((row + i) + '') + (col + 1));
+                    newShipBorder.push((((row + i) - 1) + '') + (col + 1));
+                    newShipBorder.push(((row + i) + '') + (col - 1));
+                    newShipBorder.push((((row + i) - 1) + '') + (col - 1));
+                } else if (i === this.shipLength - 1) {
+                    newShipBorder.push((((row + i) + 1) + '') + col);
+                    newShipBorder.push(((row + i) + '') + (col + 1));
+                    newShipBorder.push((((row + i) + 1) + '') + (col + 1));
+                    newShipBorder.push(((row + i) + '') + (col - 1));
+                    newShipBorder.push((((row + i) + 1) + '') + (col - 1));
+                } else {
+                    newShipBorder.push(((row + i) + '') + (col + 1));
+                    newShipBorder.push(((row + i) + '') + (col - 1));
+                }
             }
         }
 
-        return newShipLocations;
+        return newShipArea;
     },
 
-    collision: function (locations) {
+    collision: function (area) {
         for (let i = 0; i < this.numShips; i++) {
             let ship = model.ships[i];
 
-            for (let j = 0; j < locations.length; j++) {
-
-                if (ship.locations.indexOf(locations[j]) >= 0) {
+            for (let j = 0; j < area[0].length; j++) {
+                if (ship.locations.indexOf(area[0][j]) >= 0 ||
+                    ship.border.indexOf(area[0][j]) >= 0) {
                     return true;
                 }
             }
