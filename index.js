@@ -22,21 +22,21 @@ let model = {
     shipLength: 3,
     shipsSunk: 0,
 
-    ships: [{ locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { locations: [0, 0, 0], hits: ['', '', ''], border: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }],
+    ships: [{ locations: [], hits: [], border: [] },
+    { locations: [], hits: [], border: [] },
+    { locations: [], hits: [], border: [] },
+    { locations: [], hits: [], border: [] }],
 
     generateShipLocations: function () {
-        let area;
+        let newShip;
 
         for (let i = 0; i < this.numShips; i++) {
             do {
-                area = this.generateShip();
-            } while (this.collision(area));
+                newShip = this.generateShip();
+            } while (this.collision(newShip));
 
-            this.ships[i].locations = area[0];
-            this.ships[i].border = area[1];
+            this.ships[i].locations = newShip.locations;
+            this.ships[i].border = newShip.border;
         }
     },
 
@@ -52,62 +52,60 @@ let model = {
             col = Math.floor(Math.random() * this.boardSize);
         }
 
-        let newShipLocations = [];
-        let newShipBorder = [];
-        let newShipArea = [newShipLocations, newShipBorder];
+        let newShip = { locations: [], border: [] };
 
         for (let i = 0; i < this.shipLength; i++) {
             if (direction === 1) {
-                newShipLocations.push(row + '' + (col + i));
+                newShip.locations.push(row + '' + (col + i));
 
                 if (i === 0) {
-                    newShipBorder.push(row + '' + ((col + i) - 1));
-                    newShipBorder.push((row + 1 + '') + (col + i));
-                    newShipBorder.push((row + 1 + '') + ((col + i) - 1));
-                    newShipBorder.push((row - 1 + '') + (col + i));
-                    newShipBorder.push((row -1 + '') + ((col + i) - 1));
+                    newShip.border.push(row + '' + ((col + i) - 1));
+                    newShip.border.push((row + 1 + '') + (col + i));
+                    newShip.border.push((row + 1 + '') + ((col + i) - 1));
+                    newShip.border.push((row - 1 + '') + (col + i));
+                    newShip.border.push((row -1 + '') + ((col + i) - 1));
                 } else if (i === this.shipLength - 1) {
-                    newShipBorder.push(row + '' + ((col + i) + 1));
-                    newShipBorder.push((row + 1 + '') + (col + i));
-                    newShipBorder.push((row + 1 + '') + ((col + i) + 1));
-                    newShipBorder.push((row - 1 + '') + (col + i));
-                    newShipBorder.push((row - 1 + '') + ((col + i) + 1));
+                    newShip.border.push(row + '' + ((col + i) + 1));
+                    newShip.border.push((row + 1 + '') + (col + i));
+                    newShip.border.push((row + 1 + '') + ((col + i) + 1));
+                    newShip.border.push((row - 1 + '') + (col + i));
+                    newShip.border.push((row - 1 + '') + ((col + i) + 1));
                 } else {
-                    newShipBorder.push((row + 1 + '') + (col + i));
-                    newShipBorder.push((row - 1 + '') + (col + i));
+                    newShip.border.push((row + 1 + '') + (col + i));
+                    newShip.border.push((row - 1 + '') + (col + i));
                 }
             } else {
-                newShipLocations.push((row + i) + '' + col);
+                newShip.locations.push((row + i) + '' + col);
 
                 if (i === 0) {
-                    newShipBorder.push((((row + i) - 1) + '') + col);
-                    newShipBorder.push(((row + i) + '') + (col + 1));
-                    newShipBorder.push((((row + i) - 1) + '') + (col + 1));
-                    newShipBorder.push(((row + i) + '') + (col - 1));
-                    newShipBorder.push((((row + i) - 1) + '') + (col - 1));
+                    newShip.border.push((((row + i) - 1) + '') + col);
+                    newShip.border.push(((row + i) + '') + (col + 1));
+                    newShip.border.push((((row + i) - 1) + '') + (col + 1));
+                    newShip.border.push(((row + i) + '') + (col - 1));
+                    newShip.border.push((((row + i) - 1) + '') + (col - 1));
                 } else if (i === this.shipLength - 1) {
-                    newShipBorder.push((((row + i) + 1) + '') + col);
-                    newShipBorder.push(((row + i) + '') + (col + 1));
-                    newShipBorder.push((((row + i) + 1) + '') + (col + 1));
-                    newShipBorder.push(((row + i) + '') + (col - 1));
-                    newShipBorder.push((((row + i) + 1) + '') + (col - 1));
+                    newShip.border.push((((row + i) + 1) + '') + col);
+                    newShip.border.push(((row + i) + '') + (col + 1));
+                    newShip.border.push((((row + i) + 1) + '') + (col + 1));
+                    newShip.border.push(((row + i) + '') + (col - 1));
+                    newShip.border.push((((row + i) + 1) + '') + (col - 1));
                 } else {
-                    newShipBorder.push(((row + i) + '') + (col + 1));
-                    newShipBorder.push(((row + i) + '') + (col - 1));
+                    newShip.border.push(((row + i) + '') + (col + 1));
+                    newShip.border.push(((row + i) + '') + (col - 1));
                 }
             }
         }
 
-        return newShipArea;
+        return newShip;
     },
 
-    collision: function (area) {
+    collision: function (newShip) {
         for (let i = 0; i < this.numShips; i++) {
             let ship = model.ships[i];
 
-            for (let j = 0; j < area[0].length; j++) {
-                if (ship.locations.indexOf(area[0][j]) >= 0 ||
-                    ship.border.indexOf(area[0][j]) >= 0) {
+            for (let j = 0; j < newShip.locations.length; j++) {
+                if (ship.locations.indexOf(newShip.locations[j]) >= 0 ||
+                    ship.border.indexOf(newShip.locations[j]) >= 0) {
                     return true;
                 }
             }
@@ -133,10 +131,10 @@ let model = {
 
                 return true;
             } else if (index >= 0 && ship.hits[index] === 'hit' && !this.isSunk(ship)) {
-                view.displayMessage('You\'ve hits this area of the ship before!');
+                view.displayMessage('You\'ve hits this area of the ship before.');
                 return false;
             } else if (index >= 0 && ship.hits[index] === 'hit' && this.isSunk(ship)) {
-                view.displayMessage('You\'ve sunk this ship before!');
+                view.displayMessage('You\'ve sunk this ship before.');
                 return false;
             }
         }
@@ -168,8 +166,8 @@ let controller = {
             let hit = model.fire(location);
 
             if (hit && model.shipsSunk === model.numShips) {
-                view.displayMessage('You sank all my battleships, in ' +
-                    this.guesses + ' guesses');
+                view.displayMessage('You sank all my battleships in ' +
+                    this.guesses + ' guesses!');
             }
         }
     }
