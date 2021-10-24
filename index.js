@@ -20,21 +20,18 @@ let model = {
     boardSize: 7,
     shipsSunk: 0,
 
-    ships: [{ locations: ['0', '0', '0', '0'], hits: ['', '', '', ''], border: [] },
-    { locations: ['0', '0', '0'], hits: ['', '', ''], border: [] },
-    { locations: ['0', '0'], hits: ['', ''], border: [] },
-    { locations: ['0'], hits: [''], border: [] }],
+    ships: [{ locations: new Array(5), hits: [], border: [] },
+    { locations: new Array(4), hits: [], border: [] },
+    { locations: new Array(3), hits: [], border: [] },
+    { locations: new Array(2), hits: [], border: [] },
+    { locations: new Array(1), hits: [], border: [] }],
 
     numShips: function () {
-        // let ships = this.ships;
-        // console.log(this.ships.length);
         return this.ships.length;
     },
 
-    shipLength: function(i) {
-        // let ships = this.ships;
-        // console.log(this.ships[i].locations.length);
-        return this.ships[i].locations.length;
+    shipLength: function (index) {
+        return this.ships[index].locations.length;
     },
 
     generateShipLocations: function () {
@@ -50,25 +47,25 @@ let model = {
         }
     },
 
-    generateShip: function (j) {
+    generateShip: function (index) {
         let direction = Math.floor(Math.random() * 2);
         let row, col;
 
-        if (this.shipLength(j) === 1) {
+        if (this.shipLength(index) === 1) {
             row = Math.floor(Math.random() * this.boardSize);
             col = Math.floor(Math.random() * this.boardSize);
         } else if (direction === 1) {
             row = Math.floor(Math.random() * this.boardSize);
-            col = Math.floor(Math.random() * (this.boardSize - this.shipLength(j)));
+            col = Math.floor(Math.random() * (this.boardSize - this.shipLength(index)));
         } else {
-            row = Math.floor(Math.random() * (this.boardSize - this.shipLength(j)));
+            row = Math.floor(Math.random() * (this.boardSize - this.shipLength(index)));
             col = Math.floor(Math.random() * this.boardSize);
         }
 
         let newShip = { locations: [], border: [] };
 
-        for (let i = 0; i < this.shipLength(j); i++) {
-            if (this.shipLength(j) === 1) {
+        for (let i = 0; i < this.shipLength(index); i++) {
+            if (this.shipLength(index) === 1) {
                 newShip.locations.push(row + '' + (col + i));
                 newShip.border.push(row + '' + ((col + i) - 1));
                 newShip.border.push(row + '' + ((col + i) + 1));
@@ -87,7 +84,7 @@ let model = {
                     newShip.border.push((row + 1 + '') + ((col + i) - 1));
                     newShip.border.push((row - 1 + '') + (col + i));
                     newShip.border.push((row - 1 + '') + ((col + i) - 1));
-                } else if (i === this.shipLength(j) - 1) {
+                } else if (i === this.shipLength(index) - 1) {
                     newShip.border.push(row + '' + ((col + i) + 1));
                     newShip.border.push((row + 1 + '') + (col + i));
                     newShip.border.push((row + 1 + '') + ((col + i) + 1));
@@ -106,7 +103,7 @@ let model = {
                     newShip.border.push((((row + i) - 1) + '') + (col + 1));
                     newShip.border.push(((row + i) + '') + (col - 1));
                     newShip.border.push((((row + i) - 1) + '') + (col - 1));
-                } else if (i === this.shipLength(j) - 1) {
+                } else if (i === this.shipLength(index) - 1) {
                     newShip.border.push((((row + i) + 1) + '') + col);
                     newShip.border.push(((row + i) + '') + (col + 1));
                     newShip.border.push((((row + i) + 1) + '') + (col + 1));
@@ -152,13 +149,13 @@ let model = {
                     this.shipsSunk++;
                 }
 
-            return true;
-            // } else if (index >= 0 && ship.hits[index] === 'hit' && !this.isSunk(ship)) {
-            //     view.displayMessage('You\'ve hits this area of the ship before.');
-            //     return false;
-            // } else if (index >= 0 && ship.hits[index] === 'hit' && this.isSunk(ship)) {
-            //     view.displayMessage('You\'ve sunk this ship before.');
-            //     return false;
+                return true;
+            } else if (index >= 0 && ship.hits[index] === 'hit' && !this.isSunk(ship)) {
+                view.displayMessage('You\'ve hits this area of the ship before.');
+                return false;
+            } else if (index >= 0 && ship.hits[index] === 'hit' && this.isSunk(ship)) {
+                view.displayMessage('You\'ve sunk this ship before.');
+                return false;
             }
         }
 
