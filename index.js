@@ -20,9 +20,10 @@ let model = {
     boardSize: 7,
     shipsSunk: 0,
 
-    ships: [{ locations: new Array(5), hits: [], border: [] },
-    { locations: new Array(4), hits: [], border: [] },
+    ships: [{ locations: new Array(4), hits: [], border: [] },
     { locations: new Array(3), hits: [], border: [] },
+    { locations: new Array(3), hits: [], border: [] },
+    { locations: new Array(2), hits: [], border: [] },
     { locations: new Array(2), hits: [], border: [] },
     { locations: new Array(1), hits: [], border: [] }],
 
@@ -67,51 +68,51 @@ let model = {
         for (let i = 0; i < this.shipLength(index); i++) {
             if (this.shipLength(index) === 1) {
                 newShip.locations.push(row + '' + (col + i));
-                newShip.border.push(row + '' + ((col + i) - 1));
-                newShip.border.push(row + '' + ((col + i) + 1));
-                newShip.border.push((row + 1 + '') + (col + i));
-                newShip.border.push((row + 1 + '') + ((col + i) - 1));
-                newShip.border.push((row + 1 + '') + ((col + i) + 1));
-                newShip.border.push((row - 1 + '') + (col + i));
-                newShip.border.push((row - 1 + '') + ((col + i) - 1));
-                newShip.border.push((row - 1 + '') + ((col + i) + 1));
+                newShip.border.push(row + '' + (col + i - 1));
+                newShip.border.push(row + '' + (col + i + 1));
+                newShip.border.push(row + 1 + '' + (col + i));
+                newShip.border.push(row + 1 + '' + (col + i - 1));
+                newShip.border.push(row + 1 + '' + (col + i + 1));
+                newShip.border.push(row - 1 + '' + (col + i));
+                newShip.border.push(row - 1 + '' + (col + i - 1));
+                newShip.border.push(row - 1 + '' + (col + i + 1));
             } else if (direction === 1) {
                 newShip.locations.push(row + '' + (col + i));
 
                 if (i === 0) {
-                    newShip.border.push(row + '' + ((col + i) - 1));
-                    newShip.border.push((row + 1 + '') + (col + i));
-                    newShip.border.push((row + 1 + '') + ((col + i) - 1));
-                    newShip.border.push((row - 1 + '') + (col + i));
-                    newShip.border.push((row - 1 + '') + ((col + i) - 1));
+                    newShip.border.push(row + '' + (col + i - 1));
+                    newShip.border.push(row + 1 + '' + (col + i));
+                    newShip.border.push(row + 1 + '' + (col + i - 1));
+                    newShip.border.push(row - 1 + '' + (col + i));
+                    newShip.border.push(row - 1 + '' + (col + i - 1));
                 } else if (i === this.shipLength(index) - 1) {
-                    newShip.border.push(row + '' + ((col + i) + 1));
-                    newShip.border.push((row + 1 + '') + (col + i));
-                    newShip.border.push((row + 1 + '') + ((col + i) + 1));
-                    newShip.border.push((row - 1 + '') + (col + i));
-                    newShip.border.push((row - 1 + '') + ((col + i) + 1));
+                    newShip.border.push(row + '' + (col + i + 1));
+                    newShip.border.push(row + 1 + '' + (col + i));
+                    newShip.border.push(row + 1 + '' + (col + i + 1));
+                    newShip.border.push(row - 1 + '' + (col + i));
+                    newShip.border.push(row - 1 + '' + (col + i + 1));
                 } else {
-                    newShip.border.push((row + 1 + '') + (col + i));
-                    newShip.border.push((row - 1 + '') + (col + i));
+                    newShip.border.push(row + 1 + '' + (col + i));
+                    newShip.border.push(row - 1 + '' + (col + i));
                 }
             } else {
-                newShip.locations.push((row + i) + '' + col);
+                newShip.locations.push(row + i + '' + col);
 
                 if (i === 0) {
-                    newShip.border.push((((row + i) - 1) + '') + col);
-                    newShip.border.push(((row + i) + '') + (col + 1));
-                    newShip.border.push((((row + i) - 1) + '') + (col + 1));
-                    newShip.border.push(((row + i) + '') + (col - 1));
-                    newShip.border.push((((row + i) - 1) + '') + (col - 1));
+                    newShip.border.push(row + i - 1 + '' + col);
+                    newShip.border.push(row + i + '' + (col + 1));
+                    newShip.border.push(row + i - 1 + '' + (col + 1));
+                    newShip.border.push(row + i + '' + (col - 1));
+                    newShip.border.push(row + i - 1 + '' + (col - 1));
                 } else if (i === this.shipLength(index) - 1) {
-                    newShip.border.push((((row + i) + 1) + '') + col);
-                    newShip.border.push(((row + i) + '') + (col + 1));
-                    newShip.border.push((((row + i) + 1) + '') + (col + 1));
-                    newShip.border.push(((row + i) + '') + (col - 1));
-                    newShip.border.push((((row + i) + 1) + '') + (col - 1));
+                    newShip.border.push(row + i + 1 + '' + col);
+                    newShip.border.push(row + i + '' + (col + 1));
+                    newShip.border.push(row + i + 1 + '' + (col + 1));
+                    newShip.border.push(row + i + '' + (col - 1));
+                    newShip.border.push(row + i + 1 + '' + (col - 1));
                 } else {
-                    newShip.border.push(((row + i) + '') + (col + 1));
-                    newShip.border.push(((row + i) + '') + (col - 1));
+                    newShip.border.push(row + i + '' + (col + 1));
+                    newShip.border.push(row + i + '' + (col - 1));
                 }
             }
         }
