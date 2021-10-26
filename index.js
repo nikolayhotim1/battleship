@@ -20,7 +20,7 @@ let model = {
     boardSize: 7,
     shipsSunk: 0,
 
-    ships: [{ locations: new Array(4), hits: [], border: [] },
+    ships: [{ locations: new Array(3), hits: [], border: [] },
     { locations: new Array(3), hits: [], border: [] },
     { locations: new Array(3), hits: [], border: [] },
     { locations: new Array(2), hits: [], border: [] },
