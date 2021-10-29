@@ -22,9 +22,11 @@ let model = {
 
     ships: [{ locations: new Array(3), hits: [], border: [] },
     { locations: new Array(3), hits: [], border: [] },
-    { locations: new Array(3), hits: [], border: [] },
     { locations: new Array(2), hits: [], border: [] },
     { locations: new Array(2), hits: [], border: [] },
+    { locations: new Array(2), hits: [], border: [] },
+    { locations: new Array(1), hits: [], border: [] },
+    { locations: new Array(1), hits: [], border: [] },
     { locations: new Array(1), hits: [], border: [] }],
 
     numShips: function () {
@@ -51,6 +53,7 @@ let model = {
     generateShip: function (index) {
         let direction = Math.floor(Math.random() * 2);
         let row, col;
+        let newShip = { locations: [], border: [] };
 
         if (this.shipLength(index) === 1) {
             row = Math.floor(Math.random() * this.boardSize);
@@ -62,8 +65,6 @@ let model = {
             row = Math.floor(Math.random() * (this.boardSize - this.shipLength(index)));
             col = Math.floor(Math.random() * this.boardSize);
         }
-
-        let newShip = { locations: [], border: [] };
 
         for (let i = 0; i < this.shipLength(index); i++) {
             if (this.shipLength(index) === 1) {
@@ -151,11 +152,13 @@ let model = {
                 }
 
                 return true;
-            } else if (index >= 0 && ship.hits[index] === 'hit' && !this.isSunk(ship)) {
+            } else if (index >= 0 && ship.hits[index] === 'hit') {
                 view.displayMessage('You\'ve hits this area of the ship before.');
-                return false;
-            } else if (index >= 0 && ship.hits[index] === 'hit' && this.isSunk(ship)) {
-                view.displayMessage('You\'ve sunk this ship before.');
+
+                if (this.isSunk(ship)) {
+                    view.displayMessage('You\'ve sunk this ship before.');
+                }
+
                 return false;
             }
         }
@@ -218,19 +221,18 @@ function parseGuess(guess) {
 }
 
 function init() {
-    let fireButton = document.getElementById('fireButton');
-    fireButton.onclick = handleFireButton;
-
     let guessInput = document.getElementById('guessInput');
     guessInput.onkeydown = handleKeyPress;
+
+    let fireButton = document.getElementById('fireButton');
+    fireButton.onclick = handleFireButton;
 
     model.generateShipLocations();
 }
 
-window.onload = init;
-
 function handleKeyPress(e) {
     let fireButton = document.getElementById('fireButton');
+
     if (e.keyCode === 13) {
         fireButton.click();
         return false;
@@ -245,3 +247,5 @@ function handleFireButton() {
     guessInput.value = '';
     guessInput.focus();
 }
+
+window.onload = init;
