@@ -1,17 +1,15 @@
 'use strict'
 
 const view = {
-	displayMessage: function (msg) {
+	displayMessage(msg) {
 		const messageArea = document.getElementById('messageArea')
 		messageArea.innerHTML = msg
 	},
-
-	displayHit: function (location) {
+	displayHit(location) {
 		const cell = document.getElementById(location)
 		cell.setAttribute('class', 'hit')
 	},
-
-	displayMiss: function (location) {
+	displayMiss(location) {
 		const cell = document.getElementById(location)
 		cell.setAttribute('class', 'miss')
 	}
@@ -21,23 +19,19 @@ const model = {
 	boardSize: 7,
 	shipsSunk: 0,
 	ships: [
+		{ locations: new Array(5), hits: [], border: [] },
+		{ locations: new Array(4), hits: [], border: [] },
 		{ locations: new Array(3), hits: [], border: [] },
-		{ locations: new Array(3), hits: [], border: [] },
-		{ locations: new Array(3), hits: [], border: [] },
-		{ locations: new Array(2), hits: [], border: [] },
 		{ locations: new Array(2), hits: [], border: [] },
 		{ locations: new Array(1), hits: [], border: [] }
 	],
-
-	numShips: function () {
+	numShips() {
 		return this.ships.length
 	},
-
-	shipLength: function (index) {
+	shipLength(index) {
 		return this.ships[index].locations.length
 	},
-
-	generateShipLocations: function () {
+	generateShipLocations() {
 		let newShip
 		for (let i = 0; i < this.numShips(); i++) {
 			do {
@@ -47,8 +41,7 @@ const model = {
 			this.ships[i].border = newShip.border
 		}
 	},
-
-	generateShip: function (index) {
+	generateShip(index) {
 		const direction = Math.floor(Math.random() * 2)
 		let row, col
 		const newShip = { locations: [], border: [] }
@@ -57,9 +50,13 @@ const model = {
 			col = Math.floor(Math.random() * this.boardSize)
 		} else if (direction === 1) {
 			row = Math.floor(Math.random() * this.boardSize)
-			col = Math.floor(Math.random() * (this.boardSize - this.shipLength(index)))
+			col = Math.floor(
+				Math.random() * (this.boardSize - this.shipLength(index))
+			)
 		} else {
-			row = Math.floor(Math.random() * (this.boardSize - this.shipLength(index)))
+			row = Math.floor(
+				Math.random() * (this.boardSize - this.shipLength(index))
+			)
 			col = Math.floor(Math.random() * this.boardSize)
 		}
 		for (let i = 0; i < this.shipLength(index); i++) {
@@ -113,8 +110,7 @@ const model = {
 		}
 		return newShip
 	},
-
-	collision: function (newShip) {
+	collision(newShip) {
 		for (let i = 0; i < this.numShips(); i++) {
 			const ship = model.ships[i]
 			for (let j = 0; j < newShip.locations.length; j++) {
@@ -128,8 +124,7 @@ const model = {
 		}
 		return false
 	},
-
-	fire: function (guess) {
+	fire(guess) {
 		for (let i = 0; i < this.numShips(); i++) {
 			const ship = this.ships[i]
 			const index = ship.locations.indexOf(guess)
@@ -154,8 +149,7 @@ const model = {
 		view.displayMessage('You missed.')
 		return false
 	},
-
-	isSunk: function (ship) {
+	isSunk(ship) {
 		for (let i = 0; i < ship.locations.length; i++) {
 			if (ship.hits[i] !== 'hit') {
 				return false
@@ -167,14 +161,17 @@ const model = {
 
 const controller = {
 	guesses: 0,
-
-	processGuess: function (guess) {
+	processGuess(guess) {
 		const location = parseGuess(guess)
 		if (location) {
 			this.guesses++
 			const hit = model.fire(location)
 			if (hit && model.shipsSunk === model.numShips()) {
-				view.displayMessage('You sank all my battleships in ' + this.guesses + ' guesses!')
+				view.displayMessage(
+					'You sank all my battleships in ' +
+						this.guesses +
+						' guesses!'
+				)
 			}
 		}
 	}
@@ -190,7 +187,12 @@ function parseGuess(guess) {
 		const column = guess.charAt(1)
 		if (isNaN(row) || isNaN(column)) {
 			alert(`Oops, that isn't on the board.`)
-		} else if (row < 0 || row >= model.boardSize || column < 0 || column >= model.boardSize) {
+		} else if (
+			row < 0 ||
+			row >= model.boardSize ||
+			column < 0 ||
+			column >= model.boardSize
+		) {
 			alert(`Oops, that's off the board!`)
 		} else {
 			return row + column
